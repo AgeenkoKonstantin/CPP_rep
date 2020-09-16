@@ -153,6 +153,9 @@
   <ItemGroup>
     <ClCompile Include="Ageenko.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="filein.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

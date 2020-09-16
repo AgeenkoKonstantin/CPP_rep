@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <string>
+#include <fstream>
 using namespace std;
 struct pipe {
 	int id;
@@ -51,10 +52,37 @@ void write_compressor_info(compressor comp) {
 	cout << "chislo rabot cehov: " << comp.number_inwork << endl;
 	cout << "effectivnoct: " << comp.efficiency << endl;
 }
+void change_status(bool& status) {
+	status = !status;
+}
+
+void save_to_file(pipe p) {
+	ofstream fout; 
+	fout.open("f.txt", ios::out);
+	if (fout.is_open()) {
+		fout << p.id << endl << p.diameter << endl << p.length << endl << p.under_repair;
+		fout.close();
+	}
+}
+
+pipe load_from_file() {
+	ifstream fin;
+	fin.open("f.txt", ios::in);
+	pipe p;
+	if (fin.is_open()) {
+		fin >> p.id;
+		fin >> p.diameter;
+		fin >> p.length;
+		fin >> p.under_repair;
+		return p;
+	}
+}
+
 int main()
 {
-	compressor c = create_compressor();
-	write_compressor_info(c);
+	pipe p = create_pipe();
+	save_to_file(p);
+	write_pipe_info(load_from_file());
 
 }
 

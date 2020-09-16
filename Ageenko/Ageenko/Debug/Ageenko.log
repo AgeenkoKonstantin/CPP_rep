@@ -1,2 +1,3 @@
 ﻿  Ageenko.cpp
+c:\git\cpp_rep\ageenko\ageenko\ageenko.cpp(79): warning C4715: load_from_file: значение возвращается не при всех путях выполнения
   Ageenko.vcxproj -> C:\Git\CPP_rep\Ageenko\Debug\Ageenko.exe
