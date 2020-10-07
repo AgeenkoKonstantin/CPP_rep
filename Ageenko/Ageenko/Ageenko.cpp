@@ -131,17 +131,22 @@ compressor load_from_fileC() {
 		fin.close();
 	}
 }
+void stop_work(compressor& comp) {
+	comp.number_inwork--;
+}
+void continue_work(compressor& comp) {
+	comp.number_inwork++;
+}
+
 
 void PrintMenu() {
-	cout << "1. Load pipe from file" << endl;
+	cout << "1. Load  from file" << endl;
 	cout << "2. Create pipe" << endl;
-	cout << "3. Load compressor from file" << endl;
-	cout << "4. Create compressor" << endl;
-	cout << "5. Change pipe status" << endl;
-	cout << "6. Print pipe info" << endl;
-	cout << "7. Print compressor info" << endl;
-	cout << "8. Save pipe to file" << endl;
-	cout << "9. Save compressor to file" << endl;
+	cout << "3. Create compressor" << endl;
+	cout << "4. Change pipe status" << endl;
+	cout << "5. Print info" << endl; 
+	cout << "6. Save  to file" << endl;
+	cout << "7. Update compressor" << endl;
 	cout << "0. Exit" << endl;
 }
 
@@ -158,32 +163,44 @@ int main()
 		{
 		case 1:
 			p = load_from_fileP();
+			comp = load_from_fileC();
 			break;
 		case 2: p = create_pipe();
 			break;
 		case 3:
-			comp = load_from_fileC();
-			break;
-		case 4:
 			comp = create_compressor();
 			break;
-		case 5:
+		case 4:
 			change_status(p.under_repair);
 			break;
-		case 6:
+		case 5:
 			write_pipe_info(p);
-			break;
-		case 7:
 			write_compressor_info(comp);
 			break;
-		case 8:
+		case 6:
 			save_to_fileP(p);
-			break;
-		case 9:
 			save_to_fileC(comp);
 			break;
-		case 10:
-			
+		case 7:
+				cout << "\t Select action:" << endl;
+				cout << "\t 1. Start work" << endl;
+				cout << "\t 2. Stop work" << endl;
+				cout << "\t 0. Back" << endl;
+				cin >> i;
+				switch (i)
+				{
+				case 1:
+					continue_work(comp);
+					break;
+				case 2:
+					stop_work(comp);
+					break;
+				case 0:
+					break;
+				default:
+					cout << "Select valid action " << endl;
+					break;
+				}
 			break;
 		case 0:
 			return 0;
