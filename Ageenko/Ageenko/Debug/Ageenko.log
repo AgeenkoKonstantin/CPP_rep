@@ -1,4 +1,4 @@
 ﻿  Ageenko.cpp
-c:\git\cpp_rep\ageenko\ageenko\ageenko.cpp(119): warning C4715: load_from_fileP: значение возвращается не при всех путях выполнения
-c:\git\cpp_rep\ageenko\ageenko\ageenko.cpp(133): warning C4715: load_from_fileC: значение возвращается не при всех путях выполнения
+c:\git\cpp_rep\ageenko\ageenko\ageenko.cpp(124): warning C4715: load_from_fileP: значение возвращается не при всех путях выполнения
+c:\git\cpp_rep\ageenko\ageenko\ageenko.cpp(142): warning C4715: load_from_fileC: значение возвращается не при всех путях выполнения
   Ageenko.vcxproj -> C:\Git\CPP_rep\Ageenko\Debug\Ageenko.exe
