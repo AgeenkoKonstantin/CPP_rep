@@ -17,64 +17,82 @@ struct compressor {
 	double efficiency;
 };
 
+int get_int(int left_border, int right_border) {
+	int i;
+	cin >> i;
+	while (i > right_border || i < left_border || cin.fail()) {
+		cout << "Vvedite udovl znachenie" << endl;
+		cin.clear();
+		cin.ignore(10000, '\n');
+		cin >> i;
+	}
+	cin.ignore(10000, '\n');
+	return i;
+}
+
+double get_double(double left_border, double right_border) {
+	double i;
+	cin >> i;
+	while (i > right_border || i < left_border || cin.fail()) {
+		cout << "Vvedite udovl znachenie " << endl;
+		cin.clear();
+		cin.ignore(10000, '\n');
+		cin >> i;
+	}
+	cin.ignore(10000, '\n');
+	return i;
+}
 
 pipe create_pipe() {
 	pipe new_pipe;
-	do {
-		cin.clear();
-		cin.ignore(10000,'\n');
-		cout << "Vvedite diameter: " << endl;
-		cin >> new_pipe.diameter;
-	} while (!(new_pipe.diameter > 0) || cin.fail());
-	do {
-		cin.clear();
-		cin.ignore(10000, '\n');
-		cout << "Vvedite dlinny: " << endl;
-		cin >> new_pipe.length;
-	} while (!(new_pipe.length > 0) || cin.fail());
+	cout << "Vvedite diametr: " << endl;
+	new_pipe.diameter = get_int(1, 3000);
+	cout << "Vvedite dlinny: " << endl;
+	new_pipe.length = get_double(1, 10000);
 	new_pipe.under_repair = false;
 	new_pipe.id = -1;
 	return new_pipe;
 }
+
 compressor create_compressor() {
 	compressor new_compressor;
-		cout << "Vvedite name: " << endl;
-		cin >> new_compressor.Name;
-	do {
-		cin.clear();
-		cin.ignore(10000, '\n');
-		cout << "Vvedite chislo cehov: " << endl;
-		cin >> new_compressor.number_workshops;
-	} while (!(new_compressor.number_workshops > 0) || cin.fail());
-	do {
-		cin.clear();
-		cin.ignore(10000, '\n');
-		cout << "Vvedite chislo rabot cehov: " << endl;
-		cin >> new_compressor.number_inwork;
-	} while (!(new_compressor.number_inwork >= 0) || !(new_compressor.number_inwork <= new_compressor.number_workshops) || cin.fail());
-	do {
-		cin.clear();
-		cin.ignore(10000, '\n');
-		cout << "Vvedite effect: " << endl;
-		cin >> new_compressor.efficiency;
-	} while (!(new_compressor.efficiency > 0) || cin.fail());
+	cout << "Vvedite name: " << endl;
+	cin >> new_compressor.Name;
+	cout << "Vvedite chislo  cehov: " << endl;
+	new_compressor.number_workshops=get_int(1, 100);
+	cout << "Vvedite chislo rabot cehov: " << endl;
+	new_compressor.number_inwork = get_int(0, new_compressor.number_workshops);
+	cout << "Vvedite effect: " << endl;
+	new_compressor.efficiency = get_double(0, 100);
 	new_compressor.id = -1;
 	return new_compressor;
 }
 
 void write_pipe_info(const pipe& p) {
-	cout << "PIPE info: " << endl;
-	cout << "Diameter: " << p.diameter << endl;
-	cout << "Length: " << p.length << endl;
-	cout << "id: " << p.id << endl;
-	cout << (p.under_repair ? "V remonte" : "Ne v remonte") << endl;
+	if (p.id == -1) {
+		cout << "PIPE info: " << endl;
+		cout << "Diameter: " << p.diameter << endl;
+		cout << "Length: " << p.length << endl;
+		cout << "id: " << p.id << endl;
+		cout << (p.under_repair ? "V remonte" : "Ne v remonte") << endl;
+	}
+	else {
+		cout << "Pipe doesn't exist" << endl;
+	}
 }
+
 void write_compressor_info(const compressor& comp) {
-	cout << "COMPRESSOR info: " << endl;
-	cout << "Name: " << comp.Name << endl;
-	cout << "Number of workshops: " << comp.number_workshops << endl;
-	cout << "Number of working workshops: " << comp.number_inwork << endl;
-	cout << "Efficienty: " << comp.efficiency << endl;
+	if(comp.Name != ""){
+		cout << "COMPRESSOR info: " << endl;
+		cout << "Name: " << comp.Name << endl;
+		cout << "Number of workshops: " << comp.number_workshops << endl;
+		cout << "Number of working workshops: " << comp.number_inwork << endl;
+		cout << "Efficienty: " << comp.efficiency << endl;
+	}
+	else {
+		cout << "Compressor doesn't exist" << endl;
+	}
+
 }
 
 void change_status(bool& status) {
@@ -82,70 +100,56 @@ void change_status(bool& status) {
 }
 
 
-//void save_to_fileP(pipe p) {
-//	ofstream fout; 
-//	fout.open("dataP.txt", ios::out);
-//	if (fout.is_open()) {
-//		fout << p.id << endl << p.diameter << endl << p.length << endl << p.under_repair;
-//		fout.close();
-//	}
-//}
-//void save_to_fileC(compressor c) {
-//	ofstream fout;
-//	fout.open("dataC.txt", ios::out);
-//	if (fout.is_open()) {
-//		fout << c.id << endl << c.Name << endl << c.number_workshops << endl << c.number_inwork << endl << c.efficiency;
-//		fout.close();
-//	}
-//}
+void save_to_fileP(const pipe& p, ofstream& fout) {
+		fout << p.id << endl << p.diameter << endl << p.length << endl << p.under_repair << endl;
+}
+void save_to_fileC(const compressor& c, ofstream& fout) {
+		fout << c.id << endl << c.Name << endl << c.number_workshops << endl << c.number_inwork << endl << c.efficiency << endl;
+}
 
-void save_to_file(pipe p, compressor c) {
+void save_to_file(const pipe& p,const compressor& c) {
 	ofstream fout;
 	fout.open("Data.txt", ios::out);
 	if (fout.is_open()) {
-		fout << p.id << endl << p.diameter << endl << p.length << endl << p.under_repair <<endl;
-		fout << c.id << endl << c.Name << endl << c.number_workshops << endl << c.number_inwork << endl << c.efficiency;
+		save_to_fileP(p, fout);
+		save_to_fileC(c, fout);
 		fout.close();
 	}
 }
 
-pipe load_from_fileP() {
-	ifstream fin;
-	fin.open("Data.txt", ios::in);
+pipe load_from_fileP(ifstream& fin) {
 	pipe p;
-	if (fin.is_open()) {
 		fin >> p.id;
 		fin >> p.diameter;
 		fin >> p.length;
 		fin >> p.under_repair;
-		fin.close();
 		return p;
-	}
 }
-compressor load_from_fileC() {
-	ifstream fin;
-	fin.open("Data.txt", ios::in);
+compressor load_from_fileC(ifstream& fin) {
 	compressor c;
-	if (fin.is_open()) {
-		for (int i = 0; i < 4; i++)
-		{
-			fin.ignore(256, '\n');
-		}
 		fin >> c.id;
 		fin >> c.Name;
 		fin >> c.number_workshops;
 		fin >> c.number_inwork;
 		fin >> c.efficiency;
 		return c;
+}
+void load_from_file(pipe& p, compressor& c) {
+	ifstream fin;
+	fin.open("Data.txt", ios::in);
+	if (fin.is_open()) {
+		p = load_from_fileP(fin);
+		c = load_from_fileC(fin);
 		fin.close();
 	}
-}
+ }
+
 void stop_work(compressor& comp) {
 	if (comp.number_inwork > 0) {
 		comp.number_inwork--;
 	}
 	else {
-		cout << "Chislo cehov = 0" << endl;
+		cout << "Chislo rabot cehov = 0" << endl;
 	}
 }
 void continue_work(compressor& comp) {
@@ -153,7 +157,7 @@ void continue_work(compressor& comp) {
 		comp.number_inwork++;
 	}
 	else {
-		cout << "Vse rabotaet" << endl;
+		cout << "Vse  ceha rabotaut" << endl;
 	}
 	
 }
@@ -174,19 +178,18 @@ int main()
 {
 	compressor comp;
 	pipe p;
-	int i;
+	int i,k;
 	while (1) {
 		cout << "Select action:" << endl;
 		PrintMenu();
-		cin >> i;
+		i = get_int(0, 7);
 		switch (i)
 		{
 		case 1:
-			p = load_from_fileP();
-			comp = load_from_fileC();
-			
+			load_from_file(p, comp);
 			break;
-		case 2: p = create_pipe();
+		case 2: 
+			p = create_pipe();
 			break;
 		case 3:
 			comp = create_compressor();
@@ -199,15 +202,14 @@ int main()
 			write_compressor_info(comp);
 			break;
 		case 6:
-			
 			save_to_file(p, comp);
 			break;
 		case 7:
 				cout << "\t Select action:" << endl;
 				cout << "\t 1. Start work" << endl;
 				cout << "\t 2. Stop work" << endl;
-				cin >> i;
-				switch (i)
+				k = get_int(1, 2);
+				switch (k)
 				{
 				case 1:
 					continue_work(comp);
@@ -222,9 +224,6 @@ int main()
 			break;
 		case 0:
 			return 0;
-			break;
-		default:
-			cout << "Select valid action: " << endl;
 			break;
 		}
 		
