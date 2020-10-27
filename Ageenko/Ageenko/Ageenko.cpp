@@ -106,19 +106,12 @@ void save_to_file(const pipe& p,const compressor& c) {
 
 pipe load_from_fileP(ifstream& fin) {
 	pipe p;
-		fin >> p.id;
-		fin >> p.diameter;
-		fin >> p.length;
-		fin >> p.under_repair;
+		fin >> p.id >> p.diameter >> p.length >> p.under_repair;
 		return p;
 }
 compressor load_from_fileC(ifstream& fin) {
 	compressor c;
-		fin >> c.id;
-		fin >> c.Name;
-		fin >> c.number_workshops;
-		fin >> c.number_inwork;
-		fin >> c.efficiency;
+	fin >> c.id  >> c.Name >> c.number_workshops >> c.number_inwork >> c.efficiency;
 		return c;
 }
 void load_from_file(pipe& p, compressor& c) {
