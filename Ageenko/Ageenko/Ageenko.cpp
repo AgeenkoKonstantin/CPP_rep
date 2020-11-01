@@ -20,7 +20,7 @@ struct pipe {
 };
 template <typename T>
 T get_value(T left_border, T right_border) {
-	int i;
+	T i;
 	cin >> i;
 	while (cin.fail() || i > right_border || i < left_border ) {
 		cout << "Vvedite udovl znachenie " <<"(" << left_border <<" - " << right_border << ")" << endl;
@@ -44,8 +44,9 @@ pipe create_pipe() {
 
 compressor create_compressor() {
 	compressor new_compressor;
-	cout << "Vvedite name: " << endl;
-	cin >> new_compressor.Name;
+	cout << "Vvedite name:";
+	cin.ignore(256, '\n');
+	getline(cin, new_compressor.Name, '\n');
 	cout << "Vvedite chislo  cehov: " << endl;
 	new_compressor.number_workshops= get_value(1, 100);
 	cout << "Vvedite chislo rabot cehov: " << endl;
@@ -81,7 +82,6 @@ void write_compressor_info(const compressor& comp) {
 	else {
 		cout << "Compressor doesnt exist" << endl;
 	}
-		
 }
 
 void change_status(bool& status) {
@@ -91,15 +91,17 @@ void change_status(bool& status) {
 void save_to_fileP(const pipe& p, ofstream& fout) {
 		fout << p.id << endl << p.diameter << endl << p.length << endl << p.under_repair << endl;
 }
+
 void save_to_fileC(const compressor& c, ofstream& fout) {
 		fout << c.id << endl << c.Name << endl << c.number_workshops << endl << c.number_inwork << endl << c.efficiency << endl;
 }
+
 void save_to_file(const pipe& p,const compressor& c) {
 	ofstream fout;
 	fout.open("Data.txt", ios::out);
 	if (fout.is_open()) {
-		save_to_fileP(p, fout);
-		save_to_fileC(c, fout);
+			save_to_fileP(p, fout);
+			save_to_fileC(c, fout);
 		fout.close();
 	}
 }
@@ -109,11 +111,16 @@ pipe load_from_fileP(ifstream& fin) {
 		fin >> p.id >> p.diameter >> p.length >> p.under_repair;
 		return p;
 }
+
 compressor load_from_fileC(ifstream& fin) {
 	compressor c;
-	fin >> c.id  >> c.Name >> c.number_workshops >> c.number_inwork >> c.efficiency;
+	fin >> c.id;
+	fin.ignore(256, '\n');
+	getline(fin, c.Name);
+	fin >> c.number_workshops >> c.number_inwork >> c.efficiency;
 		return c;
 }
+
 void load_from_file(pipe& p, compressor& c) {
 	ifstream fin;
 	fin.open("Data.txt", ios::in);
@@ -132,6 +139,7 @@ void stop_work(compressor& comp) {
 		cout << "Chislo rabot cehov = 0" << endl;
 	}
 }
+
 void continue_work(compressor& comp) {
 	 if (comp.number_inwork < comp.number_workshops) {
 		comp.number_inwork++;
@@ -155,7 +163,7 @@ void PrintMenu() {
 int main(){
 	compressor comp;
 	pipe p;
-	int i,k;
+	int i;
 	while (1) {
 		cout << "Select action:" << endl;
 		PrintMenu();
@@ -190,8 +198,8 @@ int main(){
 					cout << "\t Select action:" << endl;
 					cout << "\t 1. Start work" << endl;
 					cout << "\t 2. Stop work" << endl;
-					k = get_value(1, 2);
-					switch (k)
+					i = get_value(1, 2);
+					switch (i)
 					{
 					case 1:
 						continue_work(comp);
