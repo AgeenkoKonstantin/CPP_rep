@@ -152,6 +152,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Ageenko.cpp" />
+    <ClCompile Include="Compressor.cpp" />
+    <ClCompile Include="Pipe.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Compressor.h" />
+    <ClInclude Include="Pipe.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
