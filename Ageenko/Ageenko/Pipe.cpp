@@ -1,6 +1,8 @@
 #include "Pipe.h"
 #include <iostream>
+#include <string>
 #include "utils.h"
+
 
 int Pipe::Maxid = 0;
 
@@ -28,7 +30,6 @@ int Pipe::GetDiametr() const
 {
 	return diametr;
 }
-
 void Pipe::SetDiametr(int new_diametr)
 {
 	diametr = new_diametr;
@@ -38,7 +39,6 @@ double Pipe::GetLength() const
 {
 	return length;
 }
-
 void Pipe::SetLength(double new_length)
 {
 	length = new_length;
@@ -48,19 +48,17 @@ bool Pipe::GetStatus() const
 {
 	return under_repair;
 }
-
 void Pipe::SetStatus(bool Status)
 {
 	under_repair = Status;
 }
-
 void Pipe::change_status()
 {
 	under_repair = !under_repair;
 }
 
 std::ostream& operator << (std::ostream& out, const Pipe& p) {
-	if (p.id == -1) {
+	if (p.id >= 0) {
 		out << "\t PIPE info: " << std::endl;
 		out << "Name: " << p.name << std::endl;
 		out << "Diameter: " << p.diametr << std::endl;
@@ -83,34 +81,30 @@ std::istream& operator >> (std::istream& in, Pipe& p) {
 	std::cout << "Vvedite dlinny: " << std::endl;
 	p.length = get_value(1.0, 10000.0);
 	p.under_repair = false;
-	p.id = -1;
 	return in;
 }
 
-Pipe::Pipe() //конструктор по умолчанию
+std::ofstream & operator << (std::ofstream& out, const Pipe & p)
 {
-	id = Maxid++; //сделать через статическую переменную
+	out <<  p.GetName() << std::endl << p.GetDiametr() << std::endl << p.GetLength() << std::endl << p.GetStatus() << std::endl;
+	return out;
+}
+
+
+std::ifstream & operator >> (std::ifstream& in, Pipe & p)
+{
+		in.ignore(256, '\n');
+		std::getline(in, p.name);
+		in >> p.diametr >> p.length >> p.under_repair;
+		return in;
+}
+
+Pipe::Pipe() 
+{
+	id = Maxid++; 
 	length = 0;
 	diametr = 0;
 	under_repair = false;
 	name = "Unknown";
 }
 
-//Pipe::Pipe(std::string name)
-//{
-//	this->name = name;
-//}
-//
-//Pipe::Pipe(const Pipe & p)
-//{
-//
-//}
-//
-//Pipe::Pipe(Pipe && p)
-//{
-//
-//}
-//
-//Pipe::~Pipe()
-//{
-//}

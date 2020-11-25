@@ -1,5 +1,7 @@
 #include "Compressor.h"
 #include <iostream>
+#include <string>
+#include <fstream>
 #include "utils.h"
 
 int Compressor::Maxid = 0;
@@ -84,7 +86,7 @@ Compressor::Compressor()
 }
 
 std::ostream& operator << (std::ostream& out, const Compressor& c) {
-	if (c.id == -1) {
+	if (c.id >= 0) {
 		out << "\t COMPRESSOR info: " << std::endl;
 		out << "Name: " << c.name << std::endl;
 		out << "id: " << c.id << std::endl;
@@ -108,6 +110,19 @@ std::istream& operator >> (std::istream& in, Compressor& c) {
 	c.number_inwork = get_value(0, c.number_workshops);
 	std::cout << "Vvedite effect: " << std::endl;
 	c.efficiency = get_value(0.0, 100.0);
-	c.id = -1;
+	return in;
+}
+
+std::ofstream & operator<<(std::ofstream & out, const Compressor & c)
+{
+	out << c.GetName() << std::endl << c.GetWorkshops() << std::endl << c.GetInWork() << std::endl << c.GetEfficiency() << std::endl;
+	return out;
+}
+
+std::ifstream & operator>>(std::ifstream & in, Compressor & c)
+{
+	in.ignore(256,'\n');
+	std::getline(in, c.name);
+	 in >> c.number_workshops >> c.number_inwork >> c.efficiency;
 	return in;
 }
