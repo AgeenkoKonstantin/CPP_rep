@@ -11,50 +11,34 @@ int Compressor::Getid() const
 	return id;
 }
 
-void Compressor::Setid(int new_id)
-{
-	id = new_id;
-}
+
 
 std::string Compressor::GetName() const
 {
 	return name;
 }
 
-void Compressor::SetName(std::string new_name)
-{
-	name = new_name;
-}
 
 int Compressor::GetInWork() const
 {
 	return number_inwork;
 }
 
-void Compressor::SetInWork(int number)
-{
-	number_inwork = number;
-}
+
 
 int Compressor::GetWorkshops() const
 {
 	return number_workshops;
 }
 
-void Compressor::SetWorkshops(int number)
-{
-	number_workshops = number;
-}
+
 
 double Compressor::GetEfficiency() const
 {
 	return efficiency;
 }
 
-void Compressor::SetEfficiency(double new_efficienty)
-{
-	efficiency = new_efficienty;
-}
+
 
 void Compressor::stop_work()
 {

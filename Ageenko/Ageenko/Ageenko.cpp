@@ -5,11 +5,13 @@
 #include "Pipe.h"
 #include "Compressor.h"
 #include "utils.h"
+#include <unordered_map>
+
 
 using namespace std;
 
 
-void save_to_file(const vector<Pipe>& p, const vector<Compressor>& c) {
+void save_to_file(const unordered_map<int, Pipe>& p, const unordered_map<int, Compressor>& c) {
 	ofstream fout;
 	string filename;
 	cout << "Vvedite filename:" << std::endl;
@@ -18,19 +20,19 @@ void save_to_file(const vector<Pipe>& p, const vector<Compressor>& c) {
 	fout.open(filename, ios::out);
 	if (fout.is_open()) {
 		fout << p.size() << endl << c.size() << endl; 
-		for (const Pipe& it : p)
+		for (const auto& it : p)
 		{
-			fout << it;
+			fout << it.second;
 		}
-		for (const Compressor& it : c)
+		for (const auto& it : c)
 		{
-			fout << it;
+			fout << it.second;
 		}
 		fout.close();
 	}
 }
 
-void load_from_file(vector <Pipe>& p,vector <Compressor>& c) {
+void load_from_file(unordered_map <int, Pipe>& p,unordered_map <int, Compressor>& c) {
 	ifstream fin;
 	int countP, countC;
 	string filename;
@@ -46,13 +48,13 @@ void load_from_file(vector <Pipe>& p,vector <Compressor>& c) {
 		{
 			Pipe LoadedPipe;
 			fin >> LoadedPipe;
-			p.push_back(LoadedPipe);
+			p.insert({ LoadedPipe.Getid(),LoadedPipe });
 		}
 		for (int i = 0; i < countC; i++)
 		{
 			Compressor LoadedCompressor;
 			fin >> LoadedCompressor;
-			c.push_back(LoadedCompressor);
+			c.insert({ LoadedCompressor.Getid(), LoadedCompressor });
 		}
 		fin.close();
 	}
@@ -70,14 +72,10 @@ void PrintMenu() {
 	cout << "9. Find pipes by Status" << endl;
 	cout << "10. Find compressors by Name" << endl;
 	cout << "11. Find compressors by percent" << endl;
+	cout << "12. Paketnoe redaktirovanie trub" << endl;
+	cout << "13. Ydalenie trub" << endl;
+	cout << "14. Ydalenie KS" << endl;
 	cout << "0. Exit" << endl;
-}
-
-template <typename T>
-T& SelecetObject(vector<T>& vec) {
-	cout << "Type index:" << endl;
-	unsigned int index = get_value(1u, vec.size());
-	return vec[index-1];
 }
 
 
@@ -92,14 +90,12 @@ bool CheckByStatus(const Pipe& p, bool param) {
 }
 
 template <typename T>
-vector<int> FindPipeByFilter(const vector<Pipe>& vec, FilterP<T> f, T param) {
+vector<int> FindPipeByFilter(const unordered_map<int, Pipe>& map, FilterP<T> f, T param) {
 	vector<int> res;
-	int i = 0;
-	for (auto it: vec) {
-		if (f(it, param)) {
-			res.push_back(i);
+	for (const auto& it: map) {
+		if (f(it.second, param)) {
+			res.push_back(it.first);
 		}
-		i++;
 	}
 	return res;
 }
@@ -115,25 +111,69 @@ bool CheckByPercent(const Compressor& c, double param) {
 }
 
 template <typename T>
-vector<int> FindCompressorByFilter(const vector<Compressor>& vec, FilterC<T> f, T param) {
+vector<int> FindCompressorByFilter(const unordered_map<int, Compressor>& map, FilterC<T> f, T param) {
 	vector<int> res;
-	int i = 0;
-	for (auto it : vec) {
-		if (f(it, param)) {
-			res.push_back(i);
+	for (const auto& it : map) {
+		if (f(it.second, param)) {
+			res.push_back(it.first);
 		}
-		i++;
 	}
 	return res;
 }
 
+void PacketRedactTrub(unordered_map<int, Pipe>& map) {
+	cout << "\tViberete redaktiruemie trubi: " << endl;
+			cout << "\t1. Po statusu v remonte" << endl;
+			cout << "\t2. Po statusu ne v remonte" << endl;
+			cout << "\t3. Po viboru polzovatelya" << endl;
+			cout << "\t0. Back" << endl;
+			switch (get_value(0,3))
+			{
+			case 1:
+			{
+				for (int i : FindPipeByFilter(map, CheckByStatus, true))
+					map.find(i)->second.change_status();
+				break;
+			}
+			case 2:
+			{
+				for (int i : FindPipeByFilter(map, CheckByStatus, false))
+					map.find(i)->second.change_status();
+				break;
+			}
+			case 3: {
+				vector<int> vec;
+				while (1) {
+					cout << "Vvedite ID" << endl;
+					vec.push_back(get_value(0, Pipe::Maxid));
+					cout << "dobavit eshe?" << endl << "\t 0. Net" << endl << "\t 1. Da" << endl;
+					if (get_value(0, 1) == 0)
+						break;
+				}
+				for (auto i : vec) {
+					if (map.find(i) != map.end())
+						map.find(i)->second.change_status();
+				}
+				break;
+			}
+			case 0: {
+				return;
+			}
+			}
+}
+
+template<typename T>
+bool del(unordered_map<int, T>& map, int id) {
+	return map.erase(id);
+}
+
 int main(){
-	vector <Pipe> pipes;
-	vector <Compressor> compressors;
+	unordered_map <int, Pipe> pipes;
+	unordered_map <int, Compressor> compressors;
 	while (1) {
 		cout << "Select action:" << endl;
 		PrintMenu();
-		switch (get_value(0, 11))
+		switch (get_value(0, 14))
 		{
 		case 1:
 		{
@@ -143,37 +183,46 @@ int main(){
 			
 		case 2: 
 		{
-			Pipe pipe;
-			cin >> pipe;
-			pipes.push_back(pipe);
+			while (1) {
+				Pipe pipe;
+				cin >> pipe;
+				pipes.insert({ pipe.Getid(), pipe });
+				cout << "dobavit eshe?" << endl << "\t 0. Net" << endl << "\t 1. Da" << endl;
+				if (get_value(0, 1) == 0) 
+					break;
+			}
 			break;
 		}
 			
 		case 3:
 		{
-			Compressor comp;
-			cin >> comp;
-			compressors.push_back(comp);
+			while (1) {
+				Compressor comp;
+				cin >> comp;
+				compressors.insert({comp.Getid(), comp });
+				cout << "dobavit eshe?" << endl << "\t 0. Net" << endl << "\t 1. Da" << endl;
+				if (get_value(0, 1) == 0)
+					break;
+			}
 			break;
 		}
 		case 4:	
 		{
-			Pipe p = SelecetObject(pipes);
-			if (p.Getid() == -1) {
-				p.change_status();
-			}
-			else {
-				cout << "Pipe doesnt exist" << endl;
-			}
+			cout << "Pipe id: " << endl;
+			unordered_map<int, Pipe>::iterator iter = pipes.find(get_value(0, Pipe::Maxid));
+			if (iter == pipes.end())
+				cout << "Truba is not found" << endl;
+			else
+				iter->second.change_status();
 			break;
 		}
 		case 5:
 		{
-			for (auto& it : pipes) {
-				cout << it;
+			for (const auto& it : pipes) {
+				cout << it.second;
 			}
-			for (auto& it : compressors) {
-				cout << it;
+			for (const auto& it : compressors) {
+				cout << it.second;
 			}
 			break;
 		}
@@ -184,26 +233,27 @@ int main(){
 		}
 		case 7: 
 		{
-			Compressor comp = SelecetObject(compressors);
-			if (comp.Getid() == -1) {
+			cout << "Compressor id: " << endl;
+			unordered_map<int, Compressor>::iterator iter = compressors.find(get_value(0, Compressor::Maxid));
+			if (iter == compressors.end()) {
+				cout << "Compressor doesnt exist" << endl;
+			}
+			else {
 				cout << "\t Select action:" << endl;
 				cout << "\t 1. Start work" << endl;
 				cout << "\t 2. Stop work" << endl;
 				switch (get_value(1, 2))
 				{
 				case 1:
-					comp.continue_work();
+					iter->second.continue_work();
 					break;
 				case 2:
-					comp.stop_work();
+					iter->second.stop_work();
 					break;
 				default:
 					cout << "Select valid action " << endl;
 					break;
 				}
-			}
-			else {
-				cout << "Compressor doesnt exist" << endl;
 			}
 			break;
 		}
@@ -213,13 +263,13 @@ int main(){
 			cin.ignore(256, '\n');
 			getline(cin, name, '\n');
 			for (int i:FindPipeByFilter<string>(pipes,CheckByName,name)) {
-				cout << pipes[i] << endl;
+				cout << pipes.find(i)->second << endl;
 			}
 			break;
 		}
 		case 9: {
 			for (int i : FindPipeByFilter(pipes, CheckByStatus, true)) {
-				cout << pipes[i] << endl;
+				cout << pipes.find(i)->second << endl;
 			}
 			break;
 		}
@@ -229,14 +279,44 @@ int main(){
 			cin.ignore(256, '\n');
 			getline(cin, name, '\n');
 			for (int i : FindCompressorByFilter<string>(compressors, CheckByName, name)) {
-				cout << compressors[i] << endl;
+				cout << compressors.find(i)->second << endl;
 			}
 			break;
 		}
 		case 11: {
 			cout << "Vvedite percent ne rabot cehov:  " << endl;
 			for (int i : FindCompressorByFilter(compressors, CheckByPercent, get_value(0.0,100.0))) {
-				cout << compressors[i] << endl;
+				cout << compressors.find(i)->second << endl;
+			}
+			break;
+		}
+		case 12: {
+			PacketRedactTrub(pipes);
+			break;
+		}
+		case 13: {
+			while (1) {
+				cout << "Id to delete" << endl;
+				if (del(pipes, get_value(0, Pipe::Maxid)))
+					cout << "Truba ydalena" << endl;
+				else
+					cout << "Truba is not found" << endl;
+				cout << "Udalit eshe?" << endl << "\t 0. Net" << endl << "\t 1. Da" << endl;
+				if (get_value(0, 1) == 0)
+					break;
+			}
+			break;
+		}
+		case 14: {
+			while (1) {
+				cout << "Id to delete" << endl;
+				if (del(compressors, get_value(0, Compressor::Maxid)))
+					cout << "KS ydalena" << endl;
+				else
+					cout << "KS is not found" << endl;
+				cout << "Udalit eshe?" << endl << "\t 0. Net" << endl << "\t 1. Da" << endl;
+				if (get_value(0, 1) == 0)
+					break;
 			}
 			break;
 		}

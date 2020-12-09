@@ -11,47 +11,26 @@ std::string Pipe::GetName() const
 	return name;
 }
 
-void Pipe::SetName(std::string new_name)
-{
-	name = new_name;
-}
-
 int Pipe::Getid() const
 {
 	return id;
-}
-
-void Pipe::Setid(int new_id)
-{
-	id = new_id;
 }
 
 int Pipe::GetDiametr() const
 {
 	return diametr;
 }
-void Pipe::SetDiametr(int new_diametr)
-{
-	diametr = new_diametr;
-}
 
 double Pipe::GetLength() const
 {
 	return length;
-}
-void Pipe::SetLength(double new_length)
-{
-	length = new_length;
 }
 
 bool Pipe::GetStatus() const
 {
 	return under_repair;
 }
-void Pipe::SetStatus(bool Status)
-{
-	under_repair = Status;
-}
+
 void Pipe::change_status()
 {
 	under_repair = !under_repair;
@@ -102,7 +81,7 @@ std::ifstream & operator >> (std::ifstream& in, Pipe & p)
 Pipe::Pipe() 
 {
 	id = Maxid++; 
-	length = 0;
+	length = 0.0;
 	diametr = 0;
 	under_repair = false;
 	name = "Unknown";

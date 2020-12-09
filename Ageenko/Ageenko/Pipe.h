@@ -7,7 +7,7 @@
 
 class Pipe
 {
-	static int Maxid;
+
 	int id;
 	double length;
 	int diametr;
@@ -15,20 +15,22 @@ class Pipe
 	std::string name;
 
 public:
+	static int Maxid;
+
 	std::string GetName() const;
-	void SetName(std::string);
+
 
 	int Getid() const;
-	void Setid(int);
+
 
 	int GetDiametr() const;
-	void SetDiametr(int);
+
 
 	double GetLength() const;
-	void SetLength(double);
+
 
 	bool GetStatus() const;
-	void SetStatus(bool);
+
 
 	void change_status();
 
