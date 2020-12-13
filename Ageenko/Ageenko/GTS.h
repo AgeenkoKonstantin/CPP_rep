@@ -18,6 +18,7 @@ class GTS
 
 	vector<vector<int>> AdjacencyMatrix; 
 	vector<vector<int>> IncidenceMatrix;
+	bool is_changed;
 
 public:
 	int GetCsIndex(int) const;
@@ -32,6 +33,8 @@ public:
 	void CreateAdjacencyMatrix(unordered_map<int, CompressorStation>&, unordered_map<int, Pipe>&);
 
 		
-	
+	void DeleteEdge(int, unordered_map<int, Pipe>& );
+
+	void DeleteVertex(int);
 };
 

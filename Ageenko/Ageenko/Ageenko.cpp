@@ -83,6 +83,7 @@ void PrintMenu() {
 	cout << "15. Add CS to GTS" << endl;
 	cout << "16. Add Pipe to GTS" << endl;
 	cout << "17. Connect CSs" << endl;
+	cout << "18. Create adjency matrix" << endl;
 	cout << "0. Exit" << endl;
 }
 
@@ -331,10 +332,12 @@ int main(){
 			break;
 		}
 		case 15: {
+			cout << "Enter CS id" << endl;
 			GTS.AddCS(compressors, get_value(0, CompressorStation::GetMaxid()));
 			break;
 		}
 		case 16: {
+			cout << "Enter Pipe id" << endl;
 			GTS.AddPipe(pipes, get_value(0, Pipe::GetMaxid()));
 			break;
 		}
