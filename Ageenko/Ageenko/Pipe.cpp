@@ -1,7 +1,10 @@
+#pragma once
 #include "Pipe.h"
-#include <iostream>
 #include <string>
+#include <iostream>
+#include <fstream>
 #include "utils.h"
+
 
 
 int Pipe::Maxid = 0;
@@ -11,9 +14,19 @@ std::string Pipe::GetName() const
 	return name;
 }
 
+int Pipe::GetMaxid()
+{
+	return Maxid;
+}
+
 int Pipe::Getid() const
 {
 	return id;
+}
+
+double Pipe::GetWeight() const
+{
+	return length;
 }
 
 int Pipe::GetDiametr() const
@@ -29,6 +42,31 @@ double Pipe::GetLength() const
 bool Pipe::GetStatus() const
 {
 	return under_repair;
+}
+
+void Pipe::SetStart(int new_start)
+{
+	start = new_start;
+}
+
+void Pipe::SetEnd(int new_end)
+{
+	end = new_end;
+}
+
+int Pipe::GetStart() const
+{
+	return start;
+}
+
+int Pipe::GetEnd() const
+{
+	return end;
+}
+
+void Pipe::ChangeUsed()
+{
+	used = !used;
 }
 
 void Pipe::change_status()
@@ -65,7 +103,7 @@ std::istream& operator >> (std::istream& in, Pipe& p) {
 
 std::ofstream & operator << (std::ofstream& out, const Pipe & p)
 {
-	out <<  p.GetName() << std::endl << p.GetDiametr() << std::endl << p.GetLength() << std::endl << p.GetStatus() << std::endl;
+	out <<  p.name << std::endl << p.diametr << std::endl << p.length << std::endl << p.under_repair << std::endl;
 	return out;
 }
 
@@ -85,5 +123,8 @@ Pipe::Pipe()
 	diametr = 0;
 	under_repair = false;
 	name = "Unknown";
+	used = false;
+	start = -1;
+	end = -1;
 }
 

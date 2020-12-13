@@ -1,17 +1,22 @@
-﻿#include <iostream>
-#include <string>
-#include <fstream>
+﻿#pragma once
+#include <unordered_map>
 #include <vector>
+#include <string>
+#include <iostream>
+#include <fstream>
 #include "Pipe.h"
 #include "Compressor.h"
 #include "utils.h"
-#include <unordered_map>
+#include "GTS.h"
+
+
+
 
 
 using namespace std;
 
 
-void save_to_file(const unordered_map<int, Pipe>& p, const unordered_map<int, Compressor>& c) {
+void save_to_file(const unordered_map<int, Pipe>& p, const unordered_map<int, CompressorStation>& c) {
 	ofstream fout;
 	string filename;
 	cout << "Vvedite filename:" << std::endl;
@@ -32,7 +37,7 @@ void save_to_file(const unordered_map<int, Pipe>& p, const unordered_map<int, Co
 	}
 }
 
-void load_from_file(unordered_map <int, Pipe>& p,unordered_map <int, Compressor>& c) {
+void load_from_file(unordered_map <int, Pipe>& p,unordered_map <int, CompressorStation>& c) {
 	ifstream fin;
 	int countP, countC;
 	string filename;
@@ -52,7 +57,7 @@ void load_from_file(unordered_map <int, Pipe>& p,unordered_map <int, Compressor>
 		}
 		for (int i = 0; i < countC; i++)
 		{
-			Compressor LoadedCompressor;
+			CompressorStation LoadedCompressor;
 			fin >> LoadedCompressor;
 			c.insert({ LoadedCompressor.Getid(), LoadedCompressor });
 		}
@@ -75,6 +80,9 @@ void PrintMenu() {
 	cout << "12. Paketnoe redaktirovanie trub" << endl;
 	cout << "13. Ydalenie trub" << endl;
 	cout << "14. Ydalenie KS" << endl;
+	cout << "15. Add CS to GTS" << endl;
+	cout << "16. Add Pipe to GTS" << endl;
+	cout << "17. Connect CSs" << endl;
 	cout << "0. Exit" << endl;
 }
 
@@ -101,17 +109,17 @@ vector<int> FindPipeByFilter(const unordered_map<int, Pipe>& map, FilterP<T> f, 
 }
 
 template<typename T>
-using FilterC = bool(*)(const Compressor& c, T param);
+using FilterC = bool(*)(const CompressorStation& c, T param);
 
-bool CheckByName(const Compressor& c, string param) {
+bool CheckByName(const CompressorStation& c, string param) {
 	return c.GetName() == param;
 }
-bool CheckByPercent(const Compressor& c, double param) {
-	return (100.0*(c.GetWorkshops() - c.GetInWork())/c.GetWorkshops() >= param);
+bool CheckByPercent(const CompressorStation& c, double param) {
+	return (c.GetPercentWorkingWorkshops() >= param);  
 }
 
 template <typename T>
-vector<int> FindCompressorByFilter(const unordered_map<int, Compressor>& map, FilterC<T> f, T param) {
+vector<int> FindCompressorByFilter(const unordered_map<int, CompressorStation>& map, FilterC<T> f, T param) {
 	vector<int> res;
 	for (const auto& it : map) {
 		if (f(it.second, param)) {
@@ -145,7 +153,7 @@ void PacketRedactTrub(unordered_map<int, Pipe>& map) {
 				vector<int> vec;
 				while (1) {
 					cout << "Vvedite ID" << endl;
-					vec.push_back(get_value(0, Pipe::Maxid));
+					vec.push_back(get_value(0, Pipe::GetMaxid()));
 					cout << "dobavit eshe?" << endl << "\t 0. Net" << endl << "\t 1. Da" << endl;
 					if (get_value(0, 1) == 0)
 						break;
@@ -162,18 +170,20 @@ void PacketRedactTrub(unordered_map<int, Pipe>& map) {
 			}
 }
 
+
 template<typename T>
 bool del(unordered_map<int, T>& map, int id) {
 	return map.erase(id);
 }
 
 int main(){
+	GTS GTS;
 	unordered_map <int, Pipe> pipes;
-	unordered_map <int, Compressor> compressors;
+	unordered_map <int, CompressorStation> compressors;
 	while (1) {
 		cout << "Select action:" << endl;
 		PrintMenu();
-		switch (get_value(0, 14))
+		switch (get_value(0, 18))
 		{
 		case 1:
 		{
@@ -197,7 +207,7 @@ int main(){
 		case 3:
 		{
 			while (1) {
-				Compressor comp;
+				CompressorStation comp;
 				cin >> comp;
 				compressors.insert({comp.Getid(), comp });
 				cout << "dobavit eshe?" << endl << "\t 0. Net" << endl << "\t 1. Da" << endl;
@@ -209,7 +219,7 @@ int main(){
 		case 4:	
 		{
 			cout << "Pipe id: " << endl;
-			unordered_map<int, Pipe>::iterator iter = pipes.find(get_value(0, Pipe::Maxid));
+			unordered_map<int, Pipe>::iterator iter = pipes.find(get_value(0, Pipe::GetMaxid()));
 			if (iter == pipes.end())
 				cout << "Truba is not found" << endl;
 			else
@@ -234,7 +244,7 @@ int main(){
 		case 7: 
 		{
 			cout << "Compressor id: " << endl;
-			unordered_map<int, Compressor>::iterator iter = compressors.find(get_value(0, Compressor::Maxid));
+			unordered_map<int, CompressorStation>::iterator iter = compressors.find(get_value(0, CompressorStation::GetMaxid()));
 			if (iter == compressors.end()) {
 				cout << "Compressor doesnt exist" << endl;
 			}
@@ -245,10 +255,10 @@ int main(){
 				switch (get_value(1, 2))
 				{
 				case 1:
-					iter->second.continue_work();
+					iter->second.RunStation();
 					break;
 				case 2:
-					iter->second.stop_work();
+					iter->second.StopStation();
 					break;
 				default:
 					cout << "Select valid action " << endl;
@@ -294,13 +304,13 @@ int main(){
 			PacketRedactTrub(pipes);
 			break;
 		}
-		case 13: {
+		case 13: {//сделать удаление сразу множества
 			while (1) {
-				cout << "Id to delete" << endl;
-				if (del(pipes, get_value(0, Pipe::Maxid)))
+				cout << "Enter the id " << endl;
+				if (del(pipes, get_value(0,Pipe::GetMaxid())))	
 					cout << "Truba ydalena" << endl;
 				else
-					cout << "Truba is not found" << endl;
+					cout << "Deletion not executed" << endl;
 				cout << "Udalit eshe?" << endl << "\t 0. Net" << endl << "\t 1. Da" << endl;
 				if (get_value(0, 1) == 0)
 					break;
@@ -310,7 +320,7 @@ int main(){
 		case 14: {
 			while (1) {
 				cout << "Id to delete" << endl;
-				if (del(compressors, get_value(0, Compressor::Maxid)))
+				if (del(compressors, get_value(0, CompressorStation::GetMaxid())))
 					cout << "KS ydalena" << endl;
 				else
 					cout << "KS is not found" << endl;
@@ -318,6 +328,22 @@ int main(){
 				if (get_value(0, 1) == 0)
 					break;
 			}
+			break;
+		}
+		case 15: {
+			GTS.AddCS(compressors, get_value(0, CompressorStation::GetMaxid()));
+			break;
+		}
+		case 16: {
+			GTS.AddPipe(pipes, get_value(0, Pipe::GetMaxid()));
+			break;
+		}
+		case 17: {
+			GTS.ConnectEdges(compressors, pipes);
+			break;
+		}
+		case 18: {
+			GTS.CreateAdjacencyMatrix(compressors, pipes);
 			break;
 		}
 		case 0:

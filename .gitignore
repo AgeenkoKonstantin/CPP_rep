@@ -351,3 +351,11 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+Ageenko/.vs/Ageenko/v15/.suo
+Ageenko/.vs/Ageenko/v15/.suo
+Ageenko/.vs/Ageenko/v15/.suo
+Ageenko/.vs/Ageenko/v15/Browse.VC.db
+*.ilk
+*.pdb
+*.tlog
+*.tlog

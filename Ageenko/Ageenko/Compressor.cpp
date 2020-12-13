@@ -1,46 +1,56 @@
+#pragma once
 #include "Compressor.h"
-#include <iostream>
 #include <string>
+#include <iostream>
 #include <fstream>
 #include "utils.h"
 
-int Compressor::Maxid = 0;
+int CompressorStation::Maxid = 0;
 
-int Compressor::Getid() const
+double CompressorStation::GetPercentWorkingWorkshops() const
+{
+	return  100.0*(number_workshops - number_inwork) / number_workshops;
+}
+
+int CompressorStation::Getid() const
 {
 	return id;
 }
 
+int CompressorStation::GetMaxid()
+{
+	return Maxid;
+}
 
 
-std::string Compressor::GetName() const
+std::string CompressorStation::GetName() const
 {
 	return name;
 }
 
 
-int Compressor::GetInWork() const
+int CompressorStation::GetInWork() const
 {
 	return number_inwork;
 }
 
 
 
-int Compressor::GetWorkshops() const
+int CompressorStation::GetWorkshops() const
 {
 	return number_workshops;
 }
 
 
 
-double Compressor::GetEfficiency() const
+double CompressorStation::GetEfficiency() const
 {
 	return efficiency;
 }
 
 
 
-void Compressor::stop_work()
+void CompressorStation::StopStation()
 {
 	if (number_inwork > 0) {
 		number_inwork--;
@@ -50,7 +60,7 @@ void Compressor::stop_work()
 	}
 }
 
-void Compressor::continue_work()
+void CompressorStation::RunStation()
 {
 	if (number_inwork < number_workshops) {
 		number_inwork++;
@@ -60,7 +70,7 @@ void Compressor::continue_work()
 	}
 }
 
-Compressor::Compressor()
+CompressorStation::CompressorStation()
 {
 	id = Maxid++;
 	name = "Unknown";
@@ -69,7 +79,7 @@ Compressor::Compressor()
 	efficiency = 0.0;
 }
 
-std::ostream& operator << (std::ostream& out, const Compressor& c) {
+std::ostream& operator << (std::ostream& out, const CompressorStation& c) {
 	if (c.id >= 0) {
 		out << "\t COMPRESSOR info: " << std::endl;
 		out << "Name: " << c.name << std::endl;
@@ -84,7 +94,7 @@ std::ostream& operator << (std::ostream& out, const Compressor& c) {
 	return out;
 }
 
-std::istream& operator >> (std::istream& in, Compressor& c) {
+std::istream& operator >> (std::istream& in, CompressorStation& c) {
 	std::cout << "Vvedite name:" << std::endl;
 	std::cin.ignore(256, '\n');
 	getline(in, c.name, '\n');
@@ -97,13 +107,13 @@ std::istream& operator >> (std::istream& in, Compressor& c) {
 	return in;
 }
 
-std::ofstream & operator<<(std::ofstream & out, const Compressor & c)
+std::ofstream & operator<<(std::ofstream & out, const CompressorStation & c)
 {
-	out << c.GetName() << std::endl << c.GetWorkshops() << std::endl << c.GetInWork() << std::endl << c.GetEfficiency() << std::endl;
+	out << c.name << std::endl << c.number_workshops << std::endl << c.number_inwork << std::endl << c.efficiency << std::endl;
 	return out;
 }
 
-std::ifstream & operator>>(std::ifstream & in, Compressor & c)
+std::ifstream & operator>>(std::ifstream & in, CompressorStation & c)
 {
 	in.ignore(256,'\n');
 	std::getline(in, c.name);

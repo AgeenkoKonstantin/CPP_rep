@@ -1,6 +1,6 @@
 #pragma once
-#include <unordered_map>
 #include <iostream>
+
 
 template <typename T>
 T get_value(T left_border, T right_border) {
@@ -12,4 +12,3 @@ T get_value(T left_border, T right_border) {
 	}
 	return i;
 }
-

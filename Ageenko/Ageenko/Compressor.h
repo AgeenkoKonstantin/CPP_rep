@@ -2,21 +2,24 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include "utils.h"
 
-class Compressor
+
+class CompressorStation
 {
-	
 	int id;
 	std::string name;
 	int number_workshops;
 	int number_inwork;
 	double efficiency;
+	static int Maxid;
 
 public:
-	static int Maxid;
+	
+	double GetPercentWorkingWorkshops() const;
+
 	int Getid() const;
 
+	static int GetMaxid();
 
 	std::string GetName() const;
 
@@ -30,15 +33,15 @@ public:
 	double GetEfficiency() const;
 
 
-	friend std::ostream& operator << (std::ostream& out, const Compressor& c);
-	friend std::istream& operator >> (std::istream& in, Compressor& c);
-	friend std::ofstream& operator << (std::ofstream& out, const Compressor& c);
-	friend std::ifstream& operator >> (std::ifstream& in, Compressor& c);
+	friend std::ostream& operator << (std::ostream& out, const CompressorStation& c);
+	friend std::istream& operator >> (std::istream& in, CompressorStation& c);
+	friend std::ofstream& operator << (std::ofstream& out, const CompressorStation& c);
+	friend std::ifstream& operator >> (std::ifstream& in, CompressorStation& c);
 
-	void stop_work();
-	void continue_work();
+	void StopStation();
+	void RunStation();
 
-	Compressor();
+	CompressorStation();
 };
 
 

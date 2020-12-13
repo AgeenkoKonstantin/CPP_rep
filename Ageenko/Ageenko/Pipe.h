@@ -1,8 +1,8 @@
 #pragma once
-#include <iostream>
 #include <string>
+#include <iostream>
 #include <fstream>
-#include "utils.h"
+
 
 
 class Pipe
@@ -13,15 +13,23 @@ class Pipe
 	int diametr;
 	bool under_repair;
 	std::string name;
+	double Weight;
+	static int Maxid;
+
+	int start;
+	int end;
+	bool used;
 
 public:
-	static int Maxid;
+	
 
 	std::string GetName() const;
 
+	static int GetMaxid();
 
 	int Getid() const;
 
+	double GetWeight() const;
 
 	int GetDiametr() const;
 
@@ -31,6 +39,13 @@ public:
 
 	bool GetStatus() const;
 
+	void SetStart(int);
+	void SetEnd(int);
+
+	int GetStart() const;
+	int GetEnd() const;
+
+	void ChangeUsed();
 
 	void change_status();
 
