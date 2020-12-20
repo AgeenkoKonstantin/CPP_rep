@@ -347,6 +347,7 @@ int main(){
 		}
 		case 18: {
 			GTS.CreateAdjacencyMatrix(compressors, pipes);
+			GTS.TopSort();
 			break;
 		}
 		case 0:

@@ -7,7 +7,7 @@ int GTS::GetCsIndex(int id) const
 	return IdIndexCS.find(id)->second;
 }
 
-void GTS::AddCS(const unordered_map<int, CompressorStation>& map, int id)
+void GTS::AddCS(const unordered_map<int, CompressorStation>& map, int id) //добавления 
 {
 	edges.insert(map.find(id)->first);
 	IdIndexCS.insert({ id, edges.size() - 1 });
@@ -31,17 +31,17 @@ void GTS::ConnectEdges(unordered_map<int, CompressorStation>& mapCS,unordered_ma
 	int CSId1 = get_value(0, CompressorStation::GetMaxid());
 	cout << "Enter pipe" << endl;
 	int pipeId = get_value(0, Pipe::GetMaxid()); //чекнуть не используется ли уже труба
-	cout << "Enter start CS: " << endl;
+	cout << "Enter end CS: " << endl;
 	int CSId2 = get_value(0, CompressorStation::GetMaxid());
 	mapPipe.find(pipeId)->second.SetStart(CSId1);
 	mapPipe.find(pipeId)->second.SetEnd(CSId2);
-	cout << "CS: " << CSId1 << " was connected with CS: " << CSId2 << endl;
+	cout << "CS: " << CSId1 << " was connected with CS: " << CSId2 << "by Pipe with id: "<< pipeId << endl;
 	//mapPipe.find(pipeId)->second.ChangeUsed();// мб не нужно
 	is_changed = true;
 }
 
 
-void GTS::CreateAdjacencyMatrix(unordered_map<int, CompressorStation>& mapCS, unordered_map<int, Pipe>& mapPipe) // делаем матрицу смежности
+void GTS::CreateAdjacencyMatrix(unordered_map<int, CompressorStation>& mapCS, unordered_map<int, Pipe>& mapPipe) 
 {
 	int n = edges.size();
 	if (is_changed) {
@@ -57,10 +57,9 @@ void GTS::CreateAdjacencyMatrix(unordered_map<int, CompressorStation>& mapCS, un
 			AdjacencyMatrix[GetCsIndex(itr->second.GetStart())][GetCsIndex(itr->second.GetEnd())] = 1;
 		}
 	}
-	// печать 
-	for (int i = 0;i< n ; i++) {
+	for (int i = 0;i< n ; i++) {  //вывод матрица, можно закоментить
 		for (int j = 0; j < n ; j++) {
-			cout << AdjacencyMatrix[i][j] << " ";
+			cout << AdjacencyMatrix[i][j] << " "; 
 		}
 		cout << endl;
 	 }
@@ -86,3 +85,51 @@ void GTS::DeleteVertex(int id)
 	IdIndexPipe.erase(id);
 
 }
+
+void GTS::TopologicalSort(int index, vector<int> & colors, bool & cycl, vector<int> & TopSortedVector)
+{
+	if (colors[index] == 2)
+		return;
+	if (cycl)
+		return;
+	if (colors[index] == 1) {
+		cycl = true;
+		return;
+	}
+	colors[index] = 1;
+	for (int i = 0; i < edges.size(); i++) {
+		if(AdjacencyMatrix[index][i] == 1){
+			int AdjacencyEdge = i;
+			TopologicalSort(AdjacencyEdge, colors, cycl, TopSortedVector);
+			if (cycl)
+				return;
+		}
+		
+	}
+	colors[index] = 2;
+	TopSortedVector.push_back(index);
+}
+
+void GTS::TopSort()
+{
+	vector<int> colors;
+	colors.resize(edges.size());
+	vector<int> TopSortedVector;
+	bool cycl = false;
+	for (int i = 0; i < edges.size(); i++) {
+		TopologicalSort(i, colors, cycl, TopSortedVector);
+	}
+	if (cycl) {
+		cout << "There is cycle" << endl;
+	}
+	else {
+		cout << "Topological sort: " << endl;
+		for (int i = 0; i < TopSortedVector.size() ;i++) { 
+			cout << TopSortedVector[i] << " ";              // переделать на инверсный порядок, вместо индексов выводить id
+		}
+		cout << endl;
+	}
+}
+
+
+

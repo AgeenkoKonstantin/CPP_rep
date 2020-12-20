@@ -36,5 +36,10 @@ public:
 	void DeleteEdge(int, unordered_map<int, Pipe>& );
 
 	void DeleteVertex(int);
+
+	void TopologicalSort(int, vector<int>&, bool&, vector<int>&);
+
+	void TopSort();
+
 };
 

@@ -1,2 +1,5 @@
-﻿  Ageenko.cpp
+﻿  GTS.cpp
+c:\git\cpp_rep\ageenko\ageenko\gts.cpp(100): warning C4018: <: несоответствие типов со знаком и без знака
+c:\git\cpp_rep\ageenko\ageenko\gts.cpp(119): warning C4018: <: несоответствие типов со знаком и без знака
+c:\git\cpp_rep\ageenko\ageenko\gts.cpp(127): warning C4018: <: несоответствие типов со знаком и без знака
   Ageenko.vcxproj -> C:\Git\CPP_rep\Ageenko\Debug\Ageenko.exe
