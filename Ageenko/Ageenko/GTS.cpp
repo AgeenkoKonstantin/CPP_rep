@@ -3,12 +3,16 @@
 #include "utils.h"
 #include <queue>
 
-void GTS::UpdateIdexCS()
+void GTS::UpdateIndex()
 {
 	int i = 0;
 	for (auto iter = IdIndexCS.begin(); iter != IdIndexCS.end(); iter++) {
 		iter->second = i;
 		++i;
+	}
+	i = 0;
+		for (auto iter = IdIndexPipe.begin(); iter != IdIndexPipe.end(); iter++) {
+			iter->second = i;
 	}
 }
 
@@ -64,7 +68,7 @@ void GTS::CreateAdjacencyMatrix(unordered_map<int, CompressorStation>& mapCS, un
 {
 	int n = edges.size();
 	if (is_changed) {
-		UpdateIdexCS();
+		UpdateIndex();
 		AdjacencyMatrix.clear();
 		AdjacencyMatrix.resize(n);
 		for (int i = 0; i < n; i++) { 
@@ -89,7 +93,7 @@ void GTS::CreateVesMatrix(unordered_map<int, CompressorStation>& mapCS, unordere
 {
 	int n = edges.size();
 	if (is_changed) {
-		UpdateIdexCS();
+		UpdateIndex();
 		VesMatrix.clear();
 		VesMatrix.resize(n);
 		for (int i = 0; i < n; i++) {

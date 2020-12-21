@@ -23,7 +23,7 @@ class GTS
 
 public:
 
-	void UpdateIdexCS();
+	void UpdateIndex();
 
 	int GetCsIndex(int) const;
 

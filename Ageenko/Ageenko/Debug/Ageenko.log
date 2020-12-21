@@ -1,8 +1,9 @@
-﻿  GTS.cpp
-C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Ageenko\GTS.cpp(141,20): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Ageenko\GTS.cpp(160,20): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Ageenko\GTS.cpp(169,21): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Ageenko\GTS.cpp(198,23): warning C4244: =: преобразование "_Ty" в "_Ty", возможна потеря данных
+﻿  Ageenko.cpp
+  GTS.cpp
+C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Ageenko\GTS.cpp(145,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Ageenko\GTS.cpp(164,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Ageenko\GTS.cpp(173,21): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Ageenko\GTS.cpp(202,23): warning C4244: =: преобразование "_Ty" в "_Ty", возможна потеря данных
           with
           [
               _Ty=double
@@ -11,5 +12,6 @@ C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Ageenko\GTS.cpp(198,23): w
           [
               _Ty=int
           ]
-C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Ageenko\GTS.cpp(27): warning C4715: GTS::GetCsId: значение возвращается не при всех путях выполнения
+  Создание кода...
+C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Ageenko\GTS.cpp(31): warning C4715: GTS::GetCsId: значение возвращается не при всех путях выполнения
   Ageenko.vcxproj -> C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Debug\Ageenko.exe
