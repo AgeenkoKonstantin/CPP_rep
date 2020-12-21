@@ -21,7 +21,12 @@ class GTS
 	bool is_changed;
 
 public:
+
+	void UpdateIdexCS();
+
 	int GetCsIndex(int) const;
+
+	int GetCsId(int) const;
 
 	void AddCS(const unordered_map<int, CompressorStation>&, int);
 

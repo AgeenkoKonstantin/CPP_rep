@@ -83,7 +83,7 @@ void PrintMenu() {
 	cout << "15. Add CS to GTS" << endl;
 	cout << "16. Add Pipe to GTS" << endl;
 	cout << "17. Connect CSs" << endl;
-	cout << "18. Create adjency matrix" << endl;
+	cout << "18. Topological Sort" << endl;
 	cout << "0. Exit" << endl;
 }
 
@@ -308,8 +308,11 @@ int main(){
 		case 13: {//сделать удаление сразу множества
 			while (1) {
 				cout << "Enter the id " << endl;
-				if (del(pipes, get_value(0,Pipe::GetMaxid())))	
+				int id = get_value(0, Pipe::GetMaxid());
+				if (del(pipes, id)) {
+					GTS.DeleteVertex(id);
 					cout << "Truba ydalena" << endl;
+				}
 				else
 					cout << "Deletion not executed" << endl;
 				cout << "Udalit eshe?" << endl << "\t 0. Net" << endl << "\t 1. Da" << endl;
@@ -321,8 +324,11 @@ int main(){
 		case 14: {
 			while (1) {
 				cout << "Id to delete" << endl;
-				if (del(compressors, get_value(0, CompressorStation::GetMaxid())))
+				int id = get_value(0, CompressorStation::GetMaxid());
+				if (del(compressors, id)) {
+					GTS.DeleteEdge(id, pipes);
 					cout << "KS ydalena" << endl;
+				}
 				else
 					cout << "KS is not found" << endl;
 				cout << "Udalit eshe?" << endl << "\t 0. Net" << endl << "\t 1. Da" << endl;

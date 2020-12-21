@@ -2,9 +2,27 @@
 #include "GTS.h"
 #include "utils.h"
 
+void GTS::UpdateIdexCS()
+{
+	int i = 0;
+	for (auto iter = IdIndexCS.begin(); iter != IdIndexCS.end(); iter++) {
+		iter->second = i;
+		++i;
+	}
+}
+
 int GTS::GetCsIndex(int id) const
 {
 	return IdIndexCS.find(id)->second;
+}
+
+int GTS::GetCsId(int index) const
+{
+	for (auto iter = IdIndexCS.begin(); iter != IdIndexCS.end(); iter++) {
+		if (iter->second == index)
+			return iter->first;
+	}
+	return 0;
 }
 
 void GTS::AddCS(const unordered_map<int, CompressorStation>& map, int id) //добавления 
@@ -45,6 +63,7 @@ void GTS::CreateAdjacencyMatrix(unordered_map<int, CompressorStation>& mapCS, un
 {
 	int n = edges.size();
 	if (is_changed) {
+		UpdateIdexCS();
 		AdjacencyMatrix.clear();
 		AdjacencyMatrix.resize(n);
 		for (int i = 0; i < n; i++) { 
@@ -57,12 +76,12 @@ void GTS::CreateAdjacencyMatrix(unordered_map<int, CompressorStation>& mapCS, un
 			AdjacencyMatrix[GetCsIndex(itr->second.GetStart())][GetCsIndex(itr->second.GetEnd())] = 1;
 		}
 	}
-	for (int i = 0;i< n ; i++) {  //вывод матрица, можно закоментить
-		for (int j = 0; j < n ; j++) {
-			cout << AdjacencyMatrix[i][j] << " "; 
-		}
-		cout << endl;
-	 }
+	//for (int i = 0;i< n ; i++) {  //вывод матрица, можно закоментить
+	//	for (int j = 0; j < n ; j++) {
+	//		cout << AdjacencyMatrix[i][j] << " "; 
+	//	}
+	//	cout << endl;
+	// }
 }
 
 void GTS::DeleteEdge(int id, unordered_map<int, Pipe>& mapPipe)
@@ -74,6 +93,8 @@ void GTS::DeleteEdge(int id, unordered_map<int, Pipe>& mapPipe)
 	for (auto iter = mapPipe.begin(); iter != mapPipe.end(); iter++) {
 		if (iter->second.GetStart() == id || iter->second.GetEnd() == id) {
 			DeleteVertex(iter->first);
+			mapPipe.erase(iter->first);
+			break;
 		}
 	}
 }
@@ -81,7 +102,7 @@ void GTS::DeleteEdge(int id, unordered_map<int, Pipe>& mapPipe)
 void GTS::DeleteVertex(int id)
 {
 	is_changed = true;
-	vertex.erase(vertex.find(id));
+	vertex.erase(id);
 	IdIndexPipe.erase(id);
 
 }
@@ -107,7 +128,7 @@ void GTS::TopologicalSort(int index, vector<int> & colors, bool & cycl, vector<i
 		
 	}
 	colors[index] = 2;
-	TopSortedVector.push_back(index);
+	TopSortedVector.push_back(GetCsId(index));
 }
 
 void GTS::TopSort()
@@ -123,9 +144,10 @@ void GTS::TopSort()
 		cout << "There is cycle" << endl;
 	}
 	else {
+		reverse(TopSortedVector.begin(), TopSortedVector.end());
 		cout << "Topological sort: " << endl;
-		for (int i = 0; i < TopSortedVector.size() ;i++) { 
-			cout << TopSortedVector[i] << " ";              // переделать на инверсный порядок, вместо индексов выводить id
+		for (int i = 0; i < TopSortedVector.size();i++) {
+			cout << TopSortedVector[i] << " ";
 		}
 		cout << endl;
 	}
