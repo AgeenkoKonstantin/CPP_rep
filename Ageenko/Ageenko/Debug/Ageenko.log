@@ -1,7 +1,15 @@
-﻿  Ageenko.cpp
-  GTS.cpp
-C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Ageenko\GTS.cpp(121,20): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Ageenko\GTS.cpp(140,20): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Ageenko\GTS.cpp(149,21): warning C4018: <: несоответствие типов со знаком и без знака
-  Создание кода...
+﻿  GTS.cpp
+C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Ageenko\GTS.cpp(141,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Ageenko\GTS.cpp(160,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Ageenko\GTS.cpp(169,21): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Ageenko\GTS.cpp(198,23): warning C4244: =: преобразование "_Ty" в "_Ty", возможна потеря данных
+          with
+          [
+              _Ty=double
+          ]
+          and
+          [
+              _Ty=int
+          ]
+C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Ageenko\GTS.cpp(27): warning C4715: GTS::GetCsId: значение возвращается не при всех путях выполнения
   Ageenko.vcxproj -> C:\Users\Konstantin1\Documents\GitHub\CPP_rep\Ageenko\Debug\Ageenko.exe

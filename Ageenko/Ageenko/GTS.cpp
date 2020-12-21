@@ -1,6 +1,7 @@
 #pragma once
 #include "GTS.h"
 #include "utils.h"
+#include <queue>
 
 void GTS::UpdateIdexCS()
 {
@@ -22,7 +23,7 @@ int GTS::GetCsId(int index) const
 		if (iter->second == index)
 			return iter->first;
 	}
-	return 0;
+	//return 0;
 }
 
 void GTS::AddCS(const unordered_map<int, CompressorStation>& map, int id) //добавления 
@@ -82,6 +83,25 @@ void GTS::CreateAdjacencyMatrix(unordered_map<int, CompressorStation>& mapCS, un
 	//	}
 	//	cout << endl;
 	// }
+}
+
+void GTS::CreateVesMatrix(unordered_map<int, CompressorStation>& mapCS, unordered_map<int, Pipe>& mapPipe)
+{
+	int n = edges.size();
+	if (is_changed) {
+		UpdateIdexCS();
+		VesMatrix.clear();
+		VesMatrix.resize(n);
+		for (int i = 0; i < n; i++) {
+			VesMatrix[i].resize(n);
+			is_changed = false;
+		}
+	}
+	for (auto itr = mapPipe.begin(); itr != mapPipe.end(); itr++) {
+		if (itr->second.GetStart() != -1) {
+			VesMatrix[GetCsIndex(itr->second.GetStart())][GetCsIndex(itr->second.GetEnd())] = itr->second.GetLength();
+		}
+	}
 }
 
 void GTS::DeleteEdge(int id, unordered_map<int, Pipe>& mapPipe)
@@ -152,6 +172,61 @@ void GTS::TopSort()
 		cout << endl;
 	}
 }
+
+void GTS::FindPath(int id1, int id2)
+{
+	int n = edges.size();      
+
+	vector<int> from(n, -1);  
+	vector<int> used(n, 0);  
+	vector<int> dist(n);   
+	int index1 = GetCsIndex(id1);
+	int index2 = GetCsIndex(id2);
+	bool ok = false; 
+	queue<int> q;   
+	q.push(index1);     
+	dist[index1] = 0;  
+	used[index1] = 1;
+	while (!q.empty()) 
+	{
+		int w = q.front(); 
+		q.pop();    
+		for (int i = 0; i < n; ++i)
+		{
+			if ((VesMatrix[w][i] != 0) && !used[i]) 
+			{
+				dist[i] = dist[w] + VesMatrix[w][i]; 
+				from[i] = w; 
+				q.push(i); 
+				used[i] = true;
+			}
+		}
+	}
+
+	if (used[index2]) 
+	{
+		cout << dist[index2] << endl;  
+		vector<int> path;
+		while (from[index2] != -1)
+		{
+			path.push_back(index2);
+			index2 = from[index2];
+		}
+
+		path.push_back(index2);
+		for (int i = path.size() - 1; i >= 0; i--)
+			cout << GetCsId(path[i]) << ' ';
+		cout << '\n';
+	}
+	else
+		cout << -1 << endl; //если мы так и не дошли до искомой - выводим '-1'
+
+}
+	
+
+
+
+
 
 
 

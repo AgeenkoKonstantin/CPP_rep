@@ -84,6 +84,8 @@ void PrintMenu() {
 	cout << "16. Add Pipe to GTS" << endl;
 	cout << "17. Connect CSs" << endl;
 	cout << "18. Topological Sort" << endl;
+	cout << "19. Shortest path " << endl;
+	cout << "20. Max flow " << endl;
 	cout << "0. Exit" << endl;
 }
 
@@ -184,7 +186,7 @@ int main(){
 	while (1) {
 		cout << "Select action:" << endl;
 		PrintMenu();
-		switch (get_value(0, 18))
+		switch (get_value(0, 20))
 		{
 		case 1:
 		{
@@ -354,6 +356,16 @@ int main(){
 		case 18: {
 			GTS.CreateAdjacencyMatrix(compressors, pipes);
 			GTS.TopSort();
+			break;
+		}
+		case 19: {
+			GTS.CreateVesMatrix(compressors, pipes);
+			GTS.FindPath(get_value(0,CompressorStation::GetMaxid()), get_value(0, CompressorStation::GetMaxid()));
+
+			break;
+		}
+		case 20: {
+			//макс поток
 			break;
 		}
 		case 0:
