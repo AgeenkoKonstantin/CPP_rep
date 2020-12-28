@@ -359,7 +359,7 @@ int main(){
 			break;
 		}
 		case 19: {
-			GTS.CreateVesMatrix(compressors, pipes);
+			//GTS.CreateVesMatrix(compressors, pipes);
 			GTS.FindPath(get_value(0,CompressorStation::GetMaxid()), get_value(0, CompressorStation::GetMaxid()));
 
 			break;

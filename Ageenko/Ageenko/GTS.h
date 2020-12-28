@@ -16,7 +16,7 @@ class GTS
 	unordered_map<int,int> IdIndexCS;
 	unordered_map<int, int> IdIndexPipe;
 
-	vector<vector<double>> VesMatrix;
+	//vector<vector<double>> VesMatrix;
 	vector<vector<int>> AdjacencyMatrix; 
 	vector<vector<int>> IncidenceMatrix;
 	bool is_changed;
@@ -38,7 +38,6 @@ public:
 
 	void CreateAdjacencyMatrix(unordered_map<int, CompressorStation>&, unordered_map<int, Pipe>&);
 
-	void CreateVesMatrix(unordered_map<int, CompressorStation>&, unordered_map<int, Pipe>&);
 		
 	void DeleteEdge(int, unordered_map<int, Pipe>& );
 

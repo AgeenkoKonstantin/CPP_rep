@@ -2,6 +2,7 @@
 #include "GTS.h"
 #include "utils.h"
 #include <queue>
+#include <vector>
 
 void GTS::UpdateIndex()
 {
@@ -13,6 +14,7 @@ void GTS::UpdateIndex()
 	i = 0;
 		for (auto iter = IdIndexPipe.begin(); iter != IdIndexPipe.end(); iter++) {
 			iter->second = i;
+			++i;
 	}
 }
 
@@ -81,32 +83,14 @@ void GTS::CreateAdjacencyMatrix(unordered_map<int, CompressorStation>& mapCS, un
 			AdjacencyMatrix[GetCsIndex(itr->second.GetStart())][GetCsIndex(itr->second.GetEnd())] = 1;
 		}
 	}
-	//for (int i = 0;i< n ; i++) {  //вывод матрица, можно закоментить
-	//	for (int j = 0; j < n ; j++) {
-	//		cout << AdjacencyMatrix[i][j] << " "; 
-	//	}
-	//	cout << endl;
-	// }
+	for (int i = 0;i< n ; i++) {  //вывод матрица, можно закоментить
+		for (int j = 0; j < n ; j++) {
+			cout << AdjacencyMatrix[i][j] << " "; 
+		}
+		cout << endl;
+	 }
 }
 
-void GTS::CreateVesMatrix(unordered_map<int, CompressorStation>& mapCS, unordered_map<int, Pipe>& mapPipe)
-{
-	int n = edges.size();
-	if (is_changed) {
-		UpdateIndex();
-		VesMatrix.clear();
-		VesMatrix.resize(n);
-		for (int i = 0; i < n; i++) {
-			VesMatrix[i].resize(n);
-			is_changed = false;
-		}
-	}
-	for (auto itr = mapPipe.begin(); itr != mapPipe.end(); itr++) {
-		if (itr->second.GetStart() != -1) {
-			VesMatrix[GetCsIndex(itr->second.GetStart())][GetCsIndex(itr->second.GetEnd())] = itr->second.GetLength();
-		}
-	}
-}
 
 void GTS::DeleteEdge(int id, unordered_map<int, Pipe>& mapPipe)
 {
@@ -114,12 +98,13 @@ void GTS::DeleteEdge(int id, unordered_map<int, Pipe>& mapPipe)
 	edges.erase(id);
 	IdIndexCS.erase(id);
 
-	for (auto iter = mapPipe.begin(); iter != mapPipe.end(); iter++) {
+	for (auto iter = mapPipe.begin(); iter != mapPipe.end();) {
 		if (iter->second.GetStart() == id || iter->second.GetEnd() == id) {
 			DeleteVertex(iter->first);
-			mapPipe.erase(iter->first);
-			break;
+			iter = mapPipe.erase(iter);
 		}
+		else
+			iter++;
 	}
 }
 
@@ -157,7 +142,7 @@ void GTS::TopologicalSort(int index, vector<int> & colors, bool & cycl, vector<i
 
 void GTS::TopSort()
 {
-	vector<int> colors;
+	vector <int> colors;
 	colors.resize(edges.size());
 	vector<int> TopSortedVector;
 	bool cycl = false;
@@ -179,51 +164,6 @@ void GTS::TopSort()
 
 void GTS::FindPath(int id1, int id2)
 {
-	int n = edges.size();      
-
-	vector<int> from(n, -1);  
-	vector<int> used(n, 0);  
-	vector<int> dist(n);   
-	int index1 = GetCsIndex(id1);
-	int index2 = GetCsIndex(id2);
-	bool ok = false; 
-	queue<int> q;   
-	q.push(index1);     
-	dist[index1] = 0;  
-	used[index1] = 1;
-	while (!q.empty()) 
-	{
-		int w = q.front(); 
-		q.pop();    
-		for (int i = 0; i < n; ++i)
-		{
-			if ((VesMatrix[w][i] != 0) && !used[i]) 
-			{
-				dist[i] = dist[w] + VesMatrix[w][i]; 
-				from[i] = w; 
-				q.push(i); 
-				used[i] = true;
-			}
-		}
-	}
-
-	if (used[index2]) 
-	{
-		cout << dist[index2] << endl;  
-		vector<int> path;
-		while (from[index2] != -1)
-		{
-			path.push_back(index2);
-			index2 = from[index2];
-		}
-
-		path.push_back(index2);
-		for (int i = path.size() - 1; i >= 0; i--)
-			cout << GetCsId(path[i]) << ' ';
-		cout << '\n';
-	}
-	else
-		cout << -1 << endl; //если мы так и не дошли до искомой - выводим '-1'
 
 }
 	
