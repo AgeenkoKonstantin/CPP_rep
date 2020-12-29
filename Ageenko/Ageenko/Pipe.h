@@ -18,7 +18,7 @@ class Pipe
 
 	int start;
 	int end;
-	bool used;
+
 
 public:
 	

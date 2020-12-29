@@ -4,6 +4,42 @@
 #include <queue>
 #include <vector>
 
+void GTS::MaxFlow(int id1)
+{
+	const double INF = 100000.0;
+	vector<bool> visited(edges.size());
+	vector<double>  distance(edges.size());
+	for (int i = 0; i < edges.size(); i++) {
+		visited[i] = false;
+		distance[i] = INF;
+	}
+	int index, u;
+	int index1 = GetCsIndex(id1);
+	distance[index1] = 0;
+
+	for (int count = 0; count < edges.size() - 1; count++) {
+		int min = INF;
+		for (int i = 0; i < edges.size(); i++) {
+			if (!visited[i] && distance[i] <= min) {
+				min = distance[i];
+				index = i;
+			}
+		}
+		
+		visited[index] = true;
+		for (int i = 0; i < edges.size();i++) {
+			if (!visited[i] && VesMatrix[index][i] && distance[index]!=INF && distance[index]+VesMatrix[index][i]<distance[i]) {
+				distance[i] = distance[index] + VesMatrix[index][i];
+			}
+		}
+	}
+	cout << "Distance to all edges, from edge " << index1 << endl;
+	for (int i = 0; i < distance.size(); i++) {
+		if(i !=index1)
+		cout << "dist to " << i << " ravno  " << distance[i] << endl;
+	}
+}
+
 void GTS::UpdateIndex()
 {
 	int i = 0;
@@ -29,10 +65,9 @@ int GTS::GetCsId(int index) const
 		if (iter->second == index)
 			return iter->first;
 	}
-	//return 0;
 }
 
-void GTS::AddCS(const unordered_map<int, CompressorStation>& map, int id) //добавления 
+void GTS::AddCS(const unordered_map<int, CompressorStation>& map, int id) 
 {
 	edges.insert(map.find(id)->first);
 	IdIndexCS.insert({ id, edges.size() - 1 });
@@ -55,13 +90,12 @@ void GTS::ConnectEdges(unordered_map<int, CompressorStation>& mapCS,unordered_ma
 	cout << "Enter start CS: " << endl;
 	int CSId1 = get_value(0, CompressorStation::GetMaxid());
 	cout << "Enter pipe" << endl;
-	int pipeId = get_value(0, Pipe::GetMaxid()); //чекнуть не используется ли уже труба
+	int pipeId = get_value(0, Pipe::GetMaxid()); 
 	cout << "Enter end CS: " << endl;
 	int CSId2 = get_value(0, CompressorStation::GetMaxid());
 	mapPipe.find(pipeId)->second.SetStart(CSId1);
 	mapPipe.find(pipeId)->second.SetEnd(CSId2);
 	cout << "CS: " << CSId1 << " was connected with CS: " << CSId2 << "by Pipe with id: "<< pipeId << endl;
-	//mapPipe.find(pipeId)->second.ChangeUsed();// мб не нужно
 	is_changed = true;
 }
 
@@ -69,7 +103,7 @@ void GTS::ConnectEdges(unordered_map<int, CompressorStation>& mapCS,unordered_ma
 void GTS::CreateAdjacencyMatrix(unordered_map<int, CompressorStation>& mapCS, unordered_map<int, Pipe>& mapPipe) 
 {
 	int n = edges.size();
-	if (is_changed) {
+	if (AdjacencyMatrix.size() != n) {
 		UpdateIndex();
 		AdjacencyMatrix.clear();
 		AdjacencyMatrix.resize(n);
@@ -91,6 +125,31 @@ void GTS::CreateAdjacencyMatrix(unordered_map<int, CompressorStation>& mapCS, un
 	 }
 }
 
+
+void GTS::CreateVesMatrix(unordered_map<int, CompressorStation>& mapCS, unordered_map<int, Pipe>& mapPipe)
+{
+	int n = edges.size();
+	if (VesMatrix.size() != n) {
+		UpdateIndex();
+		VesMatrix.clear();
+		VesMatrix.resize(n);
+		for (int i = 0; i < n; i++) {
+			VesMatrix[i].resize(n);
+		}
+		is_changed = false;
+	}
+	for (auto itr = mapPipe.begin(); itr != mapPipe.end(); itr++) {
+		if (itr->second.GetStart() != -1) {
+			VesMatrix[GetCsIndex(itr->second.GetStart())][GetCsIndex(itr->second.GetEnd())] = itr->second.GetWeight();
+		}
+	}
+	for (int i = 0; i < n; i++) {  //вывод матрицы, можно закоментить
+		for (int j = 0; j < n; j++) {
+			cout << VesMatrix[i][j] << " ";
+		}
+		cout << endl;
+	}
+}
 
 void GTS::DeleteEdge(int id, unordered_map<int, Pipe>& mapPipe)
 {
@@ -162,10 +221,7 @@ void GTS::TopSort()
 	}
 }
 
-void GTS::FindPath(int id1, int id2)
-{
 
-}
 	
 
 

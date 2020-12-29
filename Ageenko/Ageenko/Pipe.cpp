@@ -26,6 +26,8 @@ int Pipe::Getid() const
 
 double Pipe::GetWeight() const
 {
+	if (this->under_repair)
+		return 100000.0;
 	return length;
 }
 
@@ -64,10 +66,7 @@ int Pipe::GetEnd() const
 	return end;
 }
 
-void Pipe::ChangeUsed()
-{
-	used = !used;
-}
+
 
 void Pipe::change_status()
 {
@@ -123,7 +122,6 @@ Pipe::Pipe()
 	diametr = 0;
 	under_repair = false;
 	name = "Unknown";
-	used = false;
 	start = -1;
 	end = -1;
 }
