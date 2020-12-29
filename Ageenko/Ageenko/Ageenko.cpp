@@ -360,8 +360,11 @@ int main(){
 		}
 		case 19: {
 			GTS.CreateVesMatrix(compressors, pipes);
-			cout << "enter first and second cs" << endl;
-			GTS.MaxFlow(get_value(0, CompressorStation::GetMaxid()));
+			cout << "enter first cs" << endl;
+			int id1 = get_value(0, CompressorStation::GetMaxid());
+			cout << "enter second cs" << endl;
+			int id2 = get_value(0, CompressorStation::GetMaxid());
+			GTS.MaxFlow(id1,id2);
 
 			break;
 		}

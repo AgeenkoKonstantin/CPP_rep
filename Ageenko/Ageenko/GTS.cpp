@@ -4,11 +4,12 @@
 #include <queue>
 #include <vector>
 
-void GTS::MaxFlow(int id1)
+void GTS::MaxFlow(int id1, int id2)
 {
 	const double INF = 100000.0;
 	vector<bool> visited(edges.size());
 	vector<double>  distance(edges.size());
+	vector<int> parent(edges.size());
 	for (int i = 0; i < edges.size(); i++) {
 		visited[i] = false;
 		distance[i] = INF;
@@ -30,14 +31,31 @@ void GTS::MaxFlow(int id1)
 		for (int i = 0; i < edges.size();i++) {
 			if (!visited[i] && VesMatrix[index][i] && distance[index]!=INF && distance[index]+VesMatrix[index][i]<distance[i]) {
 				distance[i] = distance[index] + VesMatrix[index][i];
+				parent.at(i) = index;
 			}
 		}
 	}
-	cout << "Distance to all edges, from edge " << index1 << endl;
-	for (int i = 0; i < distance.size(); i++) {
-		if(i !=index1)
-		cout << "dist to " << i << " ravno  " << distance[i] << endl;
+	int index2 = GetCsIndex(id2);
+	vector<int> temp;
+
+	if (distance[index2] == INF) {
+		cout << "pyti net" << endl;
+			return;
 	}
+
+	int i = index2;
+	while (1) {
+		temp.push_back(i);
+		if (i == index1) break;
+		i = parent[i];
+	}
+	reverse(temp.begin(), temp.end());
+	cout << "Path form " << id1 << " to " << id2 << " = " << distance[index2] << endl;
+	cout << GetCsId(temp.at(0));
+	for (int i = 1; i < temp.size(); ++i)
+		cout << " -> " << GetCsId(temp.at(i)) ;
+	cout << endl;
+	
 }
 
 void GTS::UpdateIndex()

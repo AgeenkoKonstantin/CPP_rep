@@ -23,7 +23,7 @@ class GTS
 
 public:
 
-	void MaxFlow(int);
+	void MaxFlow(int, int);
 
 	void UpdateIndex();
 
