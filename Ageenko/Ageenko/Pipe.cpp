@@ -9,6 +9,13 @@
 
 int Pipe::Maxid = 0;
 
+double Pipe::GetProd() const
+{
+	if (this->under_repair)
+		return 0.0;
+	return length;
+}
+
 std::string Pipe::GetName() const
 {
 	return name;

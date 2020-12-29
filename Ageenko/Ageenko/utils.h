@@ -12,3 +12,5 @@ T get_value(T left_border, T right_border) {
 	}
 	return i;
 }
+
+

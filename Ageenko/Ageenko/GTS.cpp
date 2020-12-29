@@ -3,8 +3,13 @@
 #include "utils.h"
 #include <queue>
 #include <vector>
+#include <set>
 
-void GTS::MaxFlow(int id1, int id2)
+
+
+
+
+void GTS::ShortDist(int id1, int id2)
 {
 	const double INF = 100000.0;
 	vector<bool> visited(edges.size());
@@ -143,6 +148,30 @@ void GTS::CreateAdjacencyMatrix(unordered_map<int, CompressorStation>& mapCS, un
 	 }
 }
 
+void GTS::CreateProdMatrix(unordered_map<int, CompressorStation>& mapCS, unordered_map<int, Pipe>& mapPipe)
+{
+	int n = edges.size();
+	if (ProdMatrix.size() != n) {
+		UpdateIndex();
+		ProdMatrix.clear();
+		ProdMatrix.resize(n);
+		for (int i = 0; i < n; i++) {
+			ProdMatrix[i].resize(n);
+		}
+		is_changed = false;
+	}
+	for (auto itr = mapPipe.begin(); itr != mapPipe.end(); itr++) {
+		if (itr->second.GetStart() != -1) {
+			ProdMatrix[GetCsIndex(itr->second.GetStart())][GetCsIndex(itr->second.GetEnd())] = itr->second.GetProd();
+		}
+	}
+	for (int i = 0; i < n; i++) {  //вывод матрицы, можно закоментить
+		for (int j = 0; j < n; j++) {
+			cout << ProdMatrix[i][j] << " ";
+		}
+		cout << endl;
+	}
+}
 
 void GTS::CreateVesMatrix(unordered_map<int, CompressorStation>& mapCS, unordered_map<int, Pipe>& mapPipe)
 {
@@ -238,8 +267,88 @@ void GTS::TopSort()
 		cout << endl;
 	}
 }
+	
+
+double min(double x, double y)
+{
+	if (x < y)
+		return x;
+	else
+		return y;
+}
 
 
+void Enque(int x, vector<int>& q, int& tail, vector<int>& color)
+{
+	q[tail] = x;
+	tail++;
+	color[x] = 1;
+}
+
+int bfs(int start, int end, vector<int>& color, vector<double>& pred, vector<int>& q, vector<vector<double>>& capacity, vector<vector<double>>& flow, int n, int& head, int& tail)
+{
+	for (int u = 0; u < n; u++)
+		color[u] = 0;
+
+	head = 0;
+	tail = 0;
+	Enque(start, q, tail, color);
+	pred[start] = -1;
+	while (head != tail)
+	{
+		int u = q[head];
+		head++;
+		color[u] = 2;
+		for (int v = 0; v < n; v++)
+		{
+			if (color[v] == 0 && (capacity[u][v] - flow[u][v]) > 0) {
+				Enque(v, q, tail, color);
+				pred[v] = u;
+			}
+		}
+	}
+	if (color[end] == 2)
+		return 0;
+	else return 1;
+}
+
+void GTS::MaxFlow(int id1, int id2)
+{
+	int start = GetCsIndex(id1);
+	int end = GetCsIndex(id2);
+	int n = edges.size();
+	int head, tail;
+	vector<vector<double>> flow;
+	vector<int> color, q;
+	vector<double> pred;
+	double maxflow = 0.0;
+	flow.resize(n);
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+			flow[i].push_back(0);
+		color.push_back(-1);
+		pred.push_back(-1);
+		q.push_back(0);
+	}
+	q.push_back(0); 
+	q.push_back(0);
+	while (bfs(start, end, color, pred, q, ProdMatrix, flow, n, head, tail) == 0)
+	{
+		double delta = 10000.0;
+		for (int u = end; pred[u] >= 0; u = pred[u])
+		{
+			delta = min(delta, (ProdMatrix[pred[u]][u] - flow[pred[u]][u]));
+		}
+		for (int u = end; pred[u] >= 0; u = pred[u])
+		{
+			flow[pred[u]][u] += delta;
+			flow[u][pred[u]] -= delta;
+		}
+		maxflow += delta;
+	}
+	cout <<  "Max potok: " << maxflow << endl;
+}
 	
 
 

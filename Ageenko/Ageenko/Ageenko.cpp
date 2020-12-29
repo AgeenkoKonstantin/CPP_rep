@@ -364,12 +364,17 @@ int main(){
 			int id1 = get_value(0, CompressorStation::GetMaxid());
 			cout << "enter second cs" << endl;
 			int id2 = get_value(0, CompressorStation::GetMaxid());
-			GTS.MaxFlow(id1,id2);
+			GTS.ShortDist(id1,id2);
 
 			break;
 		}
 		case 20: {
-			//макс поток
+			GTS.CreateProdMatrix(compressors, pipes);
+			cout << "enter first cs" << endl;
+			int id1 = get_value(0, CompressorStation::GetMaxid());
+			cout << "enter second cs" << endl;
+			int id2 = get_value(0, CompressorStation::GetMaxid());
+			GTS.MaxFlow(id1, id2);
 			break;
 		}
 		case 0:

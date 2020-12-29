@@ -18,12 +18,13 @@ class GTS
 
 	vector<vector<double>> VesMatrix;
 	vector<vector<int>> AdjacencyMatrix; 
-	vector<vector<int>> IncidenceMatrix;
+	vector<vector<double>> ProdMatrix;
+
 	bool is_changed;
 
 public:
-
 	void MaxFlow(int, int);
+	void ShortDist(int, int);
 
 	void UpdateIndex();
 
@@ -37,7 +38,7 @@ public:
 	
 	void ConnectEdges( unordered_map<int, CompressorStation>&,  unordered_map<int, Pipe>&);
 
-
+	void CreateProdMatrix(unordered_map<int, CompressorStation>&, unordered_map<int, Pipe>&);
 	void CreateAdjacencyMatrix(unordered_map<int, CompressorStation>&, unordered_map<int, Pipe>&);
 	void CreateVesMatrix(unordered_map<int, CompressorStation>&, unordered_map<int, Pipe>&);
 		

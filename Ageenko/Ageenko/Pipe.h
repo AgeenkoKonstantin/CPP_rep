@@ -22,6 +22,7 @@ class Pipe
 
 public:
 	
+	double GetProd() const;
 
 	std::string GetName() const;
 
